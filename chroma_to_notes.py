@@ -1,20 +1,25 @@
 import librosa
 import librosa.display as ld
 import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib import rc
 
 def main():
 	y, sr = librosa.load("./music.wav", mono=True)
-	getNotes(y, sr)
+	notes = getNotes(y, sr)
 
 
 def getNotes(y, sr):
 
 	y_harmonic, y_percussive = librosa.effects.hpss(y)
 	chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr)
+	duration = librosa.get_duration(y=y, sr=sr)
+	num_columns = len(chroma[0])
+	num_rows = len(chroma)
 
 	# Zeros out everything that is below 0.75 for clarity purposes
-	for i in range(0, len(chroma)):
-		for j in range(0, len(chroma[i])):
+	for i in range(num_rows):
+		for j in range(num_columns):
 			if (chroma[i][j] < 0.80):
 				chroma[i][j] = 0
 
@@ -22,7 +27,7 @@ def getNotes(y, sr):
 	tuple_list = []
 	note_row = 0 # 0,1,2,3,... ---> C,C#,D,D#,...
 
-	for n in range(0, len(chroma)):
+	for n in range(num_rows):
 
 		num_zeros = 0
 		note_length = 0
@@ -30,7 +35,7 @@ def getNotes(y, sr):
 		current_index = 0
 		i = 0
 
-		while (i < len(chroma[note_row])):
+		while (i < num_columns):
 
 			# Found a value that could lead to possible note
 			if (chroma[note_row][i] > 0.0):
@@ -41,7 +46,7 @@ def getNotes(y, sr):
 				# we allow only 3 zeros in the middle of notes and continue
 				# to increment note_length until 3 zeros are found.
 				while (num_zeros != 3):
-					if (current_index > (len(chroma[note_row]) - 1)):
+					if (current_index > (num_columns) - 1):
 						break
 					if (chroma[note_row][current_index] == 0.0):
 						num_zeros += 1
@@ -52,8 +57,8 @@ def getNotes(y, sr):
 				if (note_length > 12):
 
 					note_name = getName(note_row)
-					beg_time = (float(start_index) / 43.0)
-					length_time = (float(current_index) / 43.0) - beg_time
+					beg_time = (float(start_index) / (float(num_columns) / duration))
+					length_time = (float(current_index) / (float(num_columns) / duration)) - beg_time
 					tuple_list.append((note_name, beg_time, length_time))
 
 	            # Loop stuff, to make sure we are
@@ -69,10 +74,9 @@ def getNotes(y, sr):
 
 	tuple_list.sort(key=lambda x: x[1])
 
-	# for i in tuple_list:
-	# 	print(i)
+	for i in tuple_list:
+		print(i)
 
-	# Plotting chroma for correctness
 	# plot_title_style = {"size": 8}
 	# rc("font", **plot_title_style)
 	# plt.style.use("dark_background")
@@ -82,6 +86,8 @@ def getNotes(y, sr):
 	# plt.colorbar()
 	# plt.show()
 	# plt.tight_layout()
+
+	return tuple_list
 
 def getName(x):
 	return {
