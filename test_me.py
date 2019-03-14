@@ -1,4 +1,3 @@
-from pydub import AudioSegment
 import librosa
 import librosa.display
 import librosa.decompose
