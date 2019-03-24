@@ -1,6 +1,12 @@
 # soundscraper
 API for audio pattern recognition
+
 ## Dependencies
+#### Python:
 - librosa
 - ffmpeg
-- pydub
+- simpleaudio
+- qhue
+
+#### Linux:
+- python3-dev libasound2-dev
