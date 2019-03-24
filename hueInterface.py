@@ -1,5 +1,6 @@
 from os import path
 from qhue import Bridge, QhueException, create_new_username
+from time import sleep
 
 def createBridgeConn(authfile, bridgeIP):
     if path.exists(authfile):
@@ -35,6 +36,7 @@ def flashLight(lights, index, **kwargs):
 
     opp_lights = {0: 3, 1: 1, 2: 2}
 
+    print("Unce")
     setLight(lights[opp_lights[(index - 1) % 3]], on = False)
     setLight(lights[opp_lights[(index - 2) % 3]], on = False)
     setLight(lights[index], **kwargs, on = True)
