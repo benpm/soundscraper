@@ -2,11 +2,11 @@
 API for audio pattern recognition
 
 ## Dependencies
-# Python:
+#### Python:
 - librosa
 - ffmpeg
 - simpleaudio
 - qhue
 
-# Linux:
+#### Linux:
 - python3-dev libasound2-dev
