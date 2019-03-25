@@ -2,21 +2,7 @@ from os import path
 from qhue import Bridge, QhueException, create_new_username
 from time import sleep
 
-"""
-    Example code:
-
-    # check for a credential file / create conn
-    bridge = createBridgeConn("auth.txt", "10.0.0.91")
-
-    # create a lights resource
-    lights = bridge.lights
-
-    # Turn on all lights, set brightness to max, min transition time
-    for index in range(1, 4):
-        setLight(lights[index], bri=254, transitiontime=0, on=True)
-"""
-
-def createBridgeConn(authfile, bridgeIP):
+def create_bridge_conn(authfile, bridgeIP):
     if path.exists(authfile):
          with open(authfile, "r") as cred_file:
             username = cred_file.read()
@@ -32,7 +18,7 @@ def createBridgeConn(authfile, bridgeIP):
 
     return Bridge(bridgeIP, username)
 
-def setLight(light, **kwargs):
+def set_light(light, **kwargs):
     """
     kwargs:
     light:             Light resource to set (likely [0 - 2])
@@ -45,12 +31,40 @@ def setLight(light, **kwargs):
 
     light.state(**kwargs)
 
-def flashLight(lights, index, **kwargs):
-    """kwargs same as setLight"""
+def flash_light(lights, index, **kwargs):
+    """kwargs same as set_light"""
 
     opp_lights = {0: 3, 1: 1, 2: 2}
 
     print("Unce")
-    setLight(lights[opp_lights[(index - 1) % 3]], on = False)
-    setLight(lights[opp_lights[(index - 2) % 3]], on = False)
-    setLight(lights[index], **kwargs, on = True)
+    set_light(lights[opp_lights[(index - 1) % 3]], on = False)
+    set_light(lights[opp_lights[(index - 2) % 3]], on = False)
+    set_light(lights[index], **kwargs, on = True)
+
+def main():
+    from random import randint
+    from time import sleep
+
+    # check for a credential file / create conn
+    bridge = create_bridge_conn("auth.txt", "10.0.0.91")
+
+    # create a lights resource
+    lights = bridge.lights
+
+    # Turn on all lights, set brightness to max, min transition time
+    for index in range(1, 4):
+        set_light(lights[index], bri=254, transitiontime=0, on=True)
+    
+    # Set random color on lights
+    for index in range(10):
+        set_light(lights[index % 3 + 1], hue=randint(0, 65535))
+        sleep(1)
+
+    # Flash random lights
+    for index in range(15):
+        flash_light(lights, index % 3 + 1, hue=randint(0, 65535))
+        sleep(1)
+    
+
+if __name__ == "__main__":
+    main()

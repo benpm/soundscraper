@@ -1,7 +1,7 @@
 import simpleaudio as sa
 from threading import Thread
 
-class AudioStream(Thread):
+class audio_stream(Thread):
     """Class to stream audio during event execution"""
     def __init__(self, audioPath):
         """

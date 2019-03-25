@@ -9,8 +9,7 @@ def main():
 	notes = getNotes(y, sr)
 
 
-def getNotes(y, sr):
-
+def get_notes(y, sr):
 	y_harmonic = librosa.effects.harmonic(y)
 	chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr, threshold=0.9)
 	duration = librosa.get_duration(y=y, sr=sr)
@@ -26,8 +25,6 @@ def getNotes(y, sr):
 				chroma[i][j] = 0
 				
 			new_chroma[i][j] = 0
-
-
 
 	tuple_list = []
 	note_row = 0 # 0,1,2,3,... ---> C,C#,D,D#,...
@@ -61,7 +58,7 @@ def getNotes(y, sr):
 				# satisfied note_length...add note to list
 				if (note_length > 12):
 
-					note_name = getName(note_row)
+					note_name = get_name(note_row)
 					beg_time = (float(start_index) / (float(num_columns) / duration))
 					length_time = (float(current_index) / (float(num_columns) / duration)) - beg_time
 					tuple_list.append((note_name, beg_time, length_time))
@@ -84,23 +81,23 @@ def getNotes(y, sr):
 	for i in tuple_list:
 		print(i)
 
-	plot_title_style = {"size": 8}
-	rc("font", **plot_title_style)
-	plt.style.use("dark_background")
-	plt.subplot(211)
-	plt.title("Chromagram")
-	librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
-	plt.colorbar()
-	plt.subplot(212)
-	plt.title("after processing")
-	librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
-	plt.colorbar()
-	plt.show()
-	plt.tight_layout()
+	# plot_title_style = {"size": 8}
+	# rc("font", **plot_title_style)
+	# plt.style.use("dark_background")
+	# plt.subplot(211)
+	# plt.title("Chromagram")
+	# librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
+	# plt.colorbar()
+	# plt.subplot(212)
+	# plt.title("after processing")
+	# librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
+	# plt.colorbar()
+	# plt.show()
+	# plt.tight_layout()
 
 	return tuple_list
 
-def getName(x):
+def get_name(x):
 	return {
 		0: "C", 1: "C#", 2: "D", 3: "D#", 4: "E", 5: "F",
 		6: "F#", 7: "G", 8: "G#", 9: "A", 10: "A#", 11: "B",
