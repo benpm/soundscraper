@@ -1,8 +1,13 @@
+"Takes samples and creates a chromagram, from which a sequence of notes is extracted and returned"
+
 import librosa
 import librosa.display as ld
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
+
+
+THRESHOLD = 0.9
 
 def main():
 	y, sr = librosa.load("test_music/tones.wav", mono=True)
@@ -11,8 +16,7 @@ def main():
 
 def get_notes(y, sr):
 	y_harmonic = librosa.effects.harmonic(y)
-	chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr, threshold=0.9)
-	#chroma = librosa.feature.chroma_cens(y=y_harmonic, sr=sr)
+	chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr, threshold=THRESHOLD)
 	duration = librosa.get_duration(y=y, sr=sr)
 	num_columns = len(chroma[0])
 	num_rows = len(chroma)
@@ -22,7 +26,7 @@ def get_notes(y, sr):
 	# Zeros out everything that is below 0.75 for clarity purposes
 	for i in range(num_rows):
 		for j in range(num_columns):
-			if (chroma[i][j] < 0.8):
+			if (chroma[i][j] < THRESHOLD):
 				chroma[i][j] = 0
 
 			new_chroma[i][j] = 0
