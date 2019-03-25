@@ -11,7 +11,7 @@ THRESHOLD = 0.9
 
 def main():
 	y, sr = librosa.load("./music.wav", mono=True)
-	notes = getNotes(y, sr)
+	notes = get_notes(y, sr)
 
 
 def get_notes(y, sr):
