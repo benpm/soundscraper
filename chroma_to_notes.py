@@ -5,13 +5,14 @@ from matplotlib import pyplot as plt
 from matplotlib import rc
 
 def main():
-	y, sr = librosa.load("./music.wav", mono=True)
-	notes = getNotes(y, sr)
+	y, sr = librosa.load("test_music/tones.wav", mono=True)
+	notes = get_notes(y, sr)
 
 
 def get_notes(y, sr):
 	y_harmonic = librosa.effects.harmonic(y)
 	chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr, threshold=0.9)
+	#chroma = librosa.feature.chroma_cens(y=y_harmonic, sr=sr)
 	duration = librosa.get_duration(y=y, sr=sr)
 	num_columns = len(chroma[0])
 	num_rows = len(chroma)
@@ -21,9 +22,9 @@ def get_notes(y, sr):
 	# Zeros out everything that is below 0.75 for clarity purposes
 	for i in range(num_rows):
 		for j in range(num_columns):
-			if (chroma[i][j] < 0.90):
+			if (chroma[i][j] < 0.8):
 				chroma[i][j] = 0
-				
+
 			new_chroma[i][j] = 0
 
 	tuple_list = []
@@ -47,16 +48,16 @@ def get_notes(y, sr):
 				# By incrementing the current_index and checking for zeros,
 				# we allow only 3 zeros in the middle of notes and continue
 				# to increment note_length until 3 zeros are found.
-				while (num_zeros != 2):
+				while (True):
 					if (current_index > (num_columns) - 1):
 						break
 					if (chroma[note_row][current_index] == 0.0):
-						num_zeros += 1
+						break
 					note_length += 1
 					current_index += 1
 
 				# satisfied note_length...add note to list
-				if (note_length > 12):
+				if (note_length > 4):
 
 					note_name = get_name(note_row)
 					beg_time = (float(start_index) / (float(num_columns) / duration))
@@ -81,20 +82,20 @@ def get_notes(y, sr):
 	for i in tuple_list:
 		print(i)
 
-	# plot_title_style = {"size": 8}
-	# rc("font", **plot_title_style)
-	# plt.style.use("dark_background")
-	# plt.subplot(211)
-	# plt.title("Chromagram")
-	# librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
-	# plt.colorbar()
-	# plt.subplot(212)
-	# plt.title("after processing")
-	# librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
-	# plt.colorbar()
-	# plt.show()
-	# plt.tight_layout()
-
+	plot_title_style = {"size": 8}
+	rc("font", **plot_title_style)
+	plt.style.use("dark_background")
+	plt.subplot(211)
+	plt.title("Chromagram")
+	librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
+	plt.colorbar()
+	plt.subplot(212)
+	plt.title("after processing")
+	librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
+	plt.colorbar()
+	plt.show()
+	plt.tight_layout()
+	tuple_list = ""
 	return tuple_list
 
 def get_name(x):
