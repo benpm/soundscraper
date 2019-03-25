@@ -12,7 +12,7 @@ class AudioStream(Thread):
         """
         Thread.__init__(self)
         
-        self.wav = sa.WaveObject.from_wave_file("test.wav")
+        self.wav = sa.WaveObject.from_wave_file(audioPath)
     
     def run(self):
         """ 

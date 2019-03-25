@@ -7,6 +7,7 @@ API for audio pattern recognition
 - ffmpeg
 - simpleaudio
 - qhue
+- pause
 
 #### Linux:
 - python3-dev libasound2-dev

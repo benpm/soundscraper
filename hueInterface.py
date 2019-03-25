@@ -2,6 +2,20 @@ from os import path
 from qhue import Bridge, QhueException, create_new_username
 from time import sleep
 
+"""
+    Example code:
+
+    # check for a credential file / create conn
+    bridge = createBridgeConn("auth.txt", "10.0.0.91")
+
+    # create a lights resource
+    lights = bridge.lights
+
+    # Turn on all lights, set brightness to max, min transition time
+    for index in range(1, 4):
+        setLight(lights[index], bri=254, transitiontime=0, on=True)
+"""
+
 def createBridgeConn(authfile, bridgeIP):
     if path.exists(authfile):
          with open(authfile, "r") as cred_file:
