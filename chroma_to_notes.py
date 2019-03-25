@@ -86,20 +86,20 @@ def get_notes(y, sr):
 	for i in tuple_list:
 		print(i)
 
-	plot_title_style = {"size": 8}
-	rc("font", **plot_title_style)
-	plt.style.use("dark_background")
-	plt.subplot(211)
-	plt.title("Chromagram")
-	librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
-	plt.colorbar()
-	plt.subplot(212)
-	plt.title("after processing")
-	librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
-	plt.colorbar()
-	plt.show()
-	plt.tight_layout()
-	tuple_list = ""
+	# plot_title_style = {"size": 8}
+	# rc("font", **plot_title_style)
+	# plt.style.use("dark_background")
+	# plt.subplot(211)
+	# plt.title("Chromagram")
+	# librosa.display.specshow(chroma, x_axis="time", y_axis="chroma")
+	# plt.colorbar()
+	# plt.subplot(212)
+	# plt.title("after processing")
+	# librosa.display.specshow(new_chroma, x_axis="time", y_axis="chroma")
+	# plt.colorbar()
+	# plt.show()
+	# plt.tight_layout()
+	
 	return tuple_list
 
 def get_name(x):
