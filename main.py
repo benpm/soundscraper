@@ -1,8 +1,9 @@
 from time import time
 import pause
 import sched
-from hue_interface import create_bridge_conn, set_light, flash_light
+from hue_interface import HueOutput, get_number_lights
 import librosa
+import signal
 from soundscraper import Tracker, Output
 from audio_stream import audio_stream
 from chroma_to_notes import get_notes
@@ -21,14 +22,20 @@ def main():
     song = audio_stream(song_name)
     waveform, samplerate = librosa.load(song_name, sr=None)
     scheduler = sched.scheduler(time, pause.seconds)
+
+    # Outputs
+    num_outputs = 5
+    for i in range(num_outputs):
+        outputs.append(HueOutput())
     
     # Detect components and their activations
     if DETECT_COMPS:
         print("Detecting components...")
-        comp_events = get_cmpnts(waveform, samplerate, 3)
-        comp_tracker = Tracker(comp_events, print)
-        trackers.append(comp_tracker)
-        comp_tracker.schedule(scheduler)
+        comp_events = get_cmpnts(waveform, samplerate, num_outputs)
+        for i in range(num_outputs):
+            comp_tracker = Tracker([x for x in comp_events if int(x[0]) == i], outputs[i].handler)
+            trackers.append(comp_tracker)
+            comp_tracker.schedule(scheduler)
     
     # Detect notes and their activations
     if DETECT_NOTES:

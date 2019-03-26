@@ -1,10 +1,10 @@
 "Takes samples and creates a chromagram, from which a sequence of notes is extracted and returned"
 
 import librosa
-import librosa.display as ld
+#import librosa.display as ld
 import numpy as np
-from matplotlib import pyplot as plt
-from matplotlib import rc
+# from matplotlib import pyplot as plt
+# from matplotlib import rc
 
 
 THRESHOLD = 0.9
