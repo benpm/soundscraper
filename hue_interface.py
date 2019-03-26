@@ -1,6 +1,18 @@
+from soundscraper import Output
 from os import path
 from qhue import Bridge, QhueException, create_new_username
 from time import sleep
+
+class HueOutput(Output):
+    def __init__(self):
+        super().__init__()
+        self.auth_file_path = "auth.txt"
+        self.address = "10.0.0.91"
+        self.bridge = create_bridge_conn(self.auth_file_path, self.address)
+        self.lights = self.bridge.lights
+    
+    def handler(self, label, start_time, length):
+        set_light(1, hue=200)
 
 def create_bridge_conn(authfile, bridgeIP):
     if path.exists(authfile):
@@ -46,7 +58,7 @@ def main():
     from time import sleep
 
     # check for a credential file / create conn
-    bridge = create_bridge_conn("auth.txt", "10.0.0.91")
+    bridge = create_bridge_conn("auth.txt", "10.0.0.91")"auth.txt"
 
     # create a lights resource
     lights = bridge.lights

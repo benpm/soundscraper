@@ -99,7 +99,7 @@ def get_notes(y, sr):
 	# plt.colorbar()
 	# plt.show()
 	# plt.tight_layout()
-	
+
 	return tuple_list
 
 def get_name(x):
