@@ -83,9 +83,6 @@ def get_notes(y, sr):
 
 	tuple_list.sort(key=lambda x: x[1])
 
-	for i in tuple_list:
-		print(i)
-
 	# plot_title_style = {"size": 8}
 	# rc("font", **plot_title_style)
 	# plt.style.use("dark_background")

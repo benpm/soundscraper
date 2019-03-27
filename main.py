@@ -1,7 +1,7 @@
 from time import time
 import pause
 import sched
-from hue_interface import HueOutput, get_number_lights
+from hue_interface import HueOutput, get_number_lights, initialize
 import librosa
 import signal
 from soundscraper import Tracker, Output
@@ -15,7 +15,7 @@ DETECT_NOTES = False
 def main():
     trackers = []
     outputs = []
-    song_name = "./test_music/test.wav"
+    song_name = "./test_music/frog.wav"
 
     # Load samples from file to be used with librosa
     print("Loading file...")
@@ -23,10 +23,12 @@ def main():
     waveform, samplerate = librosa.load(song_name, sr=None)
     scheduler = sched.scheduler(time, pause.seconds)
 
+    bridge = initialize()
+
     # Outputs
-    num_outputs = 5
-    for i in range(num_outputs):
-        outputs.append(HueOutput())
+    num_outputs = 3
+    for i in range(1, num_outputs + 1):
+        outputs.append(HueOutput(bridge, i))
     
     # Detect components and their activations
     if DETECT_COMPS:
@@ -41,7 +43,13 @@ def main():
     if DETECT_NOTES:
         print("Detecting notes...")
         notes = get_notes(waveform, samplerate)
-        note_tracker = Tracker(notes, print)
+        note_tracker = Tracker([x for x in notes if x[0] == "A"], outputs[0].handler)
+        trackers.append(note_tracker)
+        note_tracker.schedule(scheduler)
+        note_tracker = Tracker([x for x in notes if x[0] == "C"], outputs[1].handler)
+        trackers.append(note_tracker)
+        note_tracker.schedule(scheduler)
+        note_tracker = Tracker([x for x in notes if x[0] == "E"], outputs[2].handler)
         trackers.append(note_tracker)
         note_tracker.schedule(scheduler)
 

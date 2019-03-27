@@ -2,36 +2,49 @@ from soundscraper import Output
 from os import path
 from qhue import Bridge, QhueException, create_new_username
 import random
+from time import sleep
+
+def initialize():
+    print("Connecting to bridge...")
+    bridge = None
+
+    try:
+        bridge = __create_bridge_conn("auth.txt", "192.168.0.83")
+        sleep(1)
+
+        for index in range(1, 4):
+            bridge.lights[index].state(bri=100, transitiontime=0, on=True)
+    except QhueException as exc:
+        print(exc)
+    return bridge
+
+def __create_bridge_conn(authfile, bridgeIP):
+    if path.exists(authfile):
+        with open(authfile, "r") as cred_file:
+            username = cred_file.read()
+    else:
+        print("Authfile does not exist! Creating new one...")
+        try:
+            username = create_new_username(bridgeIP)
+        except QhueException as err:
+            print(f"Error occurred while creating a new username: {format(err)}")
+        # store the username in a credential file
+        with open(authfile, "w") as cred_file:
+            cred_file.write(username)
+
+    return Bridge(bridgeIP, username)
 
 class HueOutput(Output):
-    def __init__(self):
+    def __init__(self, bridge, light_index):
         super().__init__()
-        self.auth_file_path = "auth.txt"
-        self.address = "10.0.0.91"
-        try:
-            self.bridge = self.__create_bridge_conn(self.auth_file_path, self.address)
-        except QhueException as exc:
-            print(exc)
-        else:
-            self.lights = self.bridge.lights
-        finally:
-            self.bridge = self.lights = None
-    
-    def __create_bridge_conn(self, authfile, bridgeIP):
-        if path.exists(authfile):
-            with open(authfile, "r") as cred_file:
-                username = cred_file.read()
-        else:
-            print("Authfile does not exist! Creating new one...")
-            try:
-                    username = create_new_username(bridgeIP)
-            except QhueException as err:
-                print(f"Error occurred while creating a new username: {format(err)}")
-            # store the username in a credential file
-            with open(authfile, "w") as cred_file:
-                cred_file.write(username)
 
-        return Bridge(bridgeIP, username)
+        self.bridge = bridge
+        self.light = self.bridge.lights[light_index]
+        self.light_index = light_index
+        self.state = True
+
+        if self.bridge == None:
+            raise Exception
     
     def __set_light(self, light, **kwargs):
         """
@@ -46,37 +59,35 @@ class HueOutput(Output):
 
         light.state(**kwargs)
 
-    def __flash_light(self, index, **kwargs):
+    def __flash_light(self, **kwargs):
         """kwargs same as set_light"""
 
-        opp_lights = {0: 3, 1: 1, 2: 2}
+        # self.__set_light(self.bridge.lights[self.light_index % 3 + 1], on = True)
 
-        print("Unce")
-        self.__set_light(self.lights[opp_lights[(index - 1) % 3]], on = False)
-        self.__set_light(self.lights[opp_lights[(index - 2) % 3]], on = False)
-        self.__set_light(self.lights[index], **kwargs, on = True)
+        self.__set_light(self.bridge.lights[self.light_index % 3 + 1], bri=1)
+        self.__set_light(self.bridge.lights[(self.light_index + 1) % 3 + 1], bri=1)
+        self.__set_light(self.light, bri=255, **kwargs)
 
-    def handler(self, label, start_time, length):
-        if self.lights == None:
+    def __bloop_light(self):
+        self.__set_light(self.light, bri=255)
+        self.__set_light(self.light, bri=0)
+
+    def handler(self, label, pythostart_time, length):
+        if self.light == None:
             print(label)
         else:
-            self.__flash_light(random.randint(0, len(self.lights)), 
-                hue=random.randint(0, 65535),
-                bri=254)
+            #self.__flash_light(hue=random.randint(0, 65535))
+            self.__bloop_light()
 
 def get_number_lights():
-    return 3 #TODO: @haydn implement this
-
-
-
-
+    return 3
 
 # def main():
 #     from random import randint
 #     from time import sleep
 
 #     # check for a credential file / create conn
-#     bridge = create_bridge_conn("auth.txt", "10.0.0.91")"auth.txt"
+#     bridge = create_bridge_conn("auth.txt", "10.0.0.91")
 
 #     # create a lights resource
 #     lights = bridge.lights
@@ -94,7 +105,6 @@ def get_number_lights():
 #     for index in range(15):
 #         flash_light(lights, index % 3 + 1, hue=randint(0, 65535))
 #         sleep(1)
-    
 
 # if __name__ == "__main__":
 #     main()
