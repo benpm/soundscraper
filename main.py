@@ -9,13 +9,12 @@ from audio_stream import audio_stream
 from chroma_to_notes import get_notes
 from get_componets import get_cmpnts
 
-DETECT_COMPS = True
-DETECT_NOTES = False
+DETECT_COMPS = False
 
 def main():
     trackers = []
     outputs = []
-    song_name = "./test_music/frog.wav"
+    song_name = "./test_music/piano.wav"
 
     # Load samples from file to be used with librosa
     print("Loading file...")
@@ -26,7 +25,7 @@ def main():
     bridge = initialize()
 
     # Outputs
-    num_outputs = 3
+    num_outputs = 2
     for i in range(1, num_outputs + 1):
         outputs.append(HueOutput(bridge, i))
     
@@ -38,18 +37,16 @@ def main():
             comp_tracker = Tracker([x for x in comp_events if int(x[0]) == i], outputs[i].handler)
             trackers.append(comp_tracker)
             comp_tracker.schedule(scheduler)
-    
-    # Detect notes and their activations
-    if DETECT_NOTES:
+    else:    
         print("Detecting notes...")
         notes = get_notes(waveform, samplerate)
-        note_tracker = Tracker([x for x in notes if x[0] == "A"], outputs[0].handler)
+        note_tracker = Tracker([x for x in notes if x[0] in ["C", "C#", "D", "D#"]], outputs[0].handler)
         trackers.append(note_tracker)
         note_tracker.schedule(scheduler)
-        note_tracker = Tracker([x for x in notes if x[0] == "C"], outputs[1].handler)
+        note_tracker = Tracker([x for x in notes if x[0] in ["E", "F", "F#", "G"]], outputs[1].handler)
         trackers.append(note_tracker)
         note_tracker.schedule(scheduler)
-        note_tracker = Tracker([x for x in notes if x[0] == "E"], outputs[2].handler)
+        note_tracker = Tracker([x for x in notes if x[0] in ["G#", "A", "A#", "B"]], outputs[2].handler)
         trackers.append(note_tracker)
         note_tracker.schedule(scheduler)
 

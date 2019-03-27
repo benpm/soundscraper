@@ -9,11 +9,11 @@ def initialize():
     bridge = None
 
     try:
-        bridge = __create_bridge_conn("auth.txt", "192.168.0.83")
+        bridge = __create_bridge_conn("auth.txt", "192.168.0.10")
         sleep(1)
 
         for index in range(1, 4):
-            bridge.lights[index].state(bri=100, transitiontime=0, on=True)
+            bridge.lights[index].state(bri=1, transitiontime=0, on=True)
     except QhueException as exc:
         print(exc)
     return bridge
