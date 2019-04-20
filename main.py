@@ -8,6 +8,7 @@ from soundscraper import Tracker, Output
 from audio_stream import audio_stream
 from chroma_to_notes import get_notes
 from get_componets import get_cmpnts
+from midi_interface import MIDIOutput, initializeMIDI
 
 DETECT_COMPS = False
 
@@ -22,12 +23,13 @@ def main():
     waveform, samplerate = librosa.load(song_name, sr=None)
     scheduler = sched.scheduler(time, pause.seconds)
 
-    bridge = initialize()
+    # bridge = initialize()
+    midiPort = initializeMIDI()
 
     # Outputs
     num_outputs = 2
     for i in range(1, num_outputs + 1):
-        outputs.append(HueOutput(bridge, i))
+        outputs.append(MIDIOutput(midiPort, i))
     
     # Detect components and their activations
     if DETECT_COMPS:
