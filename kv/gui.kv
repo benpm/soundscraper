@@ -1,0 +1,194 @@
+<Row@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    basename: ''
+	pathname: ''
+    Label:
+        text: root.basename
+
+
+<SetupScreen>:
+	rv: rv
+	on_pre_enter:
+		root.update_rv()
+	BoxLayout:
+		orientation: "horizontal"
+		spacing: 30
+		padding: (30, 30)
+
+		BoxLayout:
+			orientation: "vertical"
+			RecycleView:
+				size_hint_y: 0.78
+		        id: rv
+		        scroll_type: ['bars', 'content']
+		        scroll_wheel_distance: dp(114)
+		        bar_width: dp(10)
+		        viewclass: 'Row'
+		        RecycleBoxLayout:
+		            default_size: None, dp(20)
+		            default_size_hint: 1, None
+		            size_hint_y: None
+		            height: self.minimum_height
+		            orientation: 'vertical'
+		            spacing: dp(2)
+
+			Label:
+				id: fileError
+				size_hint_y: 0.05
+				text: "Invalid File"
+				color: 1, 0, 0, 0
+			BoxLayout:
+				padding: (0, 30, 0, 0)
+				spacing: 30
+				size_hint_y: 0.07
+				TextInput:
+					id: pathname
+					size_hint_x: 0.70
+			        hint_text: "Enter .wav File Path"
+				Label:
+					text: "Or"
+					size_hint_x: 0.05
+				Button:
+					size_hint_x: 0.25
+					text: "Browse"
+					on_release:
+						root.manager.transition.direction = "right"
+						root.manager.transition.duration = 0.25
+						root.manager.current = "fileBrowser"
+						fileError.color = 1, 0, 0, 0
+						pathname.text = ""
+			BoxLayout:
+				size_hint_y: 0.1
+				padding: (80, 30, 80, 0)
+				Button:
+					size_hint_x: 1
+					text: "Add To Playlist"
+					on_release:
+						root.checkPathname(pathname, fileError)
+
+		BoxLayout:
+			orientation: "vertical"
+			Accordion:
+				id: accordion
+				size_hint_y: 0.9
+				orientation: "vertical"
+				AccordionItem:
+					title: "Philips Hue Light Bulbs"
+					BoxLayout:
+						orientation: "vertical"
+						padding: (0, 30, 0, 0)
+						Label:
+							size_hint_y: 0.1
+							text: "Configuration for Philips Hue LightBulbs Interface"
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Detect Notes"
+							BoxLayout:
+								padding: (50, 80, 50, 80)
+								ToggleButton:
+									allow_no_selection: False
+									id: notes
+									text: "On"
+									state: "down"
+									group: "PHLmode"
+									on_state:
+										if notes.text is "Off": notes.text = "On"
+										else: notes.text = "Off"
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Detect Components"
+							BoxLayout:
+								padding: (50, 80, 50, 80)
+								ToggleButton:
+									allow_no_selection: False
+									id: comps
+									text: "Off"
+									state: "normal"
+									group: "PHLmode"
+									on_state:
+										if comps.text is "Off": comps.text = "On"
+										else: comps.text = "Off"
+
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Number of Outputs"
+							Slider:
+								id: s1
+								step: 1
+								min: 1
+								max: 3
+							Label:
+								size_hint_x: 0.20
+								text: '{}'.format(s1.value)
+								id: num_outputs
+
+
+				AccordionItem:
+					title: "MIDI Notes"
+					Label:
+						text: "Configuration"
+				AccordionItem:
+					title: "Interface 3"
+					Label:
+						text: "Configuration"
+
+			BoxLayout:
+				size_hint_y: 0.1
+				orientation: "horizontal"
+				spacing: 15
+				padding: (0, 30, 0, 0)
+
+				__safe_id: [dropdown.__self__]
+
+				Button:
+					text: "Click To Select Interface"
+					on_release: dropdown.open(self)
+
+					id: btn
+				Widget:
+					size_hint_x: None
+					width: 0
+					on_parent: dropdown.dismiss()
+				DropDown:
+					id: dropdown
+					on_select: btn.text = '{}'.format(args[1])
+					Button:
+				        text: 'Philips Hue Lights'
+				        size_hint_y: None
+				        height: 50
+				        on_release:
+							dropdown.select('Philips Hue Lights')
+							run.disabled = False
+				    Button:
+				        text: 'MIDI Notes'
+				        size_hint_y: None
+				        height: 50
+				        on_release:
+							dropdown.select('MIDI Notes')
+							run.disabled = False
+					Button:
+				        text: 'Third Interface'
+				        size_hint_y: None
+				        height: 50
+				        on_release:
+							dropdown.select('Third Interface')
+							run.disabled = False
+				Button:
+					background_normal: ''
+					background_color: [0, 0.8, 0.3, 1]
+					text: "Run"
+					id: run
+					disabled: True
+					on_press:
+						root.manager.transition.direction = "left"
+						root.manager.transition.duration = 0.25
+						root.manager.current = "running"
+						root.run(btn.text, accordion)
