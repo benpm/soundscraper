@@ -1,0 +1,14 @@
+<RunScreen>:
+	BoxLayout:
+		orientation: "horizontal"
+		spacing: 30
+		padding: (30, 30)
+
+		Button:
+			text: "Back To Setup"
+			on_press:
+				root.manager.transition.direction = "right"
+				root.manager.transition.duration = 0.25
+				root.manager.current = "setup"
+
+		
