@@ -4,8 +4,26 @@ import random
 from time import sleep
 import mido.ports
 
-def initializeMIDI():
-    return mido.open_output(mido.get_output_names()[-1])
+NOTES = {
+    "C": 72,
+    "C#": 73,
+    "D": 74,
+    "D#": 75,
+    "E": 76,
+    "F": 77,
+    "F#": 78,
+    "G": 79,
+    "G#": 80,
+    "A": 81,
+    "A#": 82,
+    "B": 83
+}
+
+def getOutputs():
+    return mido.get_output_names()
+
+def initializeMIDI(outputName):
+    return mido.open_output(outputName)
 
 class MIDIOutput(Output):
     def __init__(self, port, index):
@@ -13,6 +31,9 @@ class MIDIOutput(Output):
         self.msg = mido.Message("note_on")
     
     def handler(self, label, start_time, length):
-        self.msg.note = random.randint(40, 110)
+        if label in NOTES.keys():
+            self.msg.note = NOTES.get(label)
+        else:
+
         self.msg.channel = 0
         self.port.send(self.msg)

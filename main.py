@@ -8,7 +8,7 @@ from soundscraper import Tracker, Output
 from audio_stream import audio_stream
 from chroma_to_notes import get_notes
 from get_componets import get_cmpnts
-from midi_interface import MIDIOutput, initializeMIDI
+from midi_interface import MIDIOutput, initializeMIDI, getOutputs
 
 DETECT_COMPS = False
 
@@ -24,7 +24,7 @@ def main():
     scheduler = sched.scheduler(time, pause.seconds)
 
     # bridge = initialize()
-    midiPort = initializeMIDI()
+    midiPort = initializeMIDI(getOutputs()[-1])
 
     # Outputs
     num_outputs = 2
