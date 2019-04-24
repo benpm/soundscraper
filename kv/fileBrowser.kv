@@ -1,0 +1,36 @@
+<FileBrowserScreen>:
+	BoxLayout:
+		orientation: "vertical"
+		spacing: 30
+		padding: (30, 30)
+
+		FileChooser:
+			size_hint_y: 0.9
+	        id: filechooser
+			path: "./"
+			dirselect: False
+			filters:  ["*.wav"]
+			multiselect: True
+	        FileChooserIconLayout
+		BoxLayout:
+			size_hint_y: 0.1
+			orientation: "horizontal"
+			spacing: 30
+			padding: (0, 30, 0, 0)
+
+			Button:
+				size_hint_x: 0.1
+				text: "Cancel"
+				on_press:
+					root.manager.transition.direction = "left"
+					root.manager.transition.duration = 0.25
+					root.manager.current = "setup"
+			Button:
+				size_hint_x: 0.1
+				text: "Add To Playlist"
+				on_press:
+					root.load(filechooser.selection)
+					filechooser.selection = []
+					root.manager.transition.direction = "left"
+					root.manager.transition.duration = 0.25
+					root.manager.current = "setup"
