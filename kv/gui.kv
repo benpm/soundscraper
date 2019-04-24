@@ -77,7 +77,23 @@
 				id: accordion
 				size_hint_y: 0.9
 				orientation: "vertical"
+				on_touch_down:
+					if zero.collapse_alpha == 0: root.selected = "Philips Hue Lights"
+					if one.collapse_alpha == 0: root.selected = "MIDI Notes"
+					if two.collapse_alpha == 0: root.selected = "Interface 3"
+
 				AccordionItem:
+					id: one
+					title: "MIDI Notes"
+					Label:
+						text: "Configuration"
+				AccordionItem:
+					id: two
+					title: "Interface 3"
+					Label:
+						text: "Configuration"
+				AccordionItem:
+					id: zero
 					title: "Philips Hue Light Bulbs"
 					BoxLayout:
 						orientation: "vertical"
@@ -131,64 +147,56 @@
 								id: num_outputs
 
 
-				AccordionItem:
-					title: "MIDI Notes"
-					Label:
-						text: "Configuration"
-				AccordionItem:
-					title: "Interface 3"
-					Label:
-						text: "Configuration"
+
 
 			BoxLayout:
 				size_hint_y: 0.1
 				orientation: "horizontal"
 				spacing: 15
-				padding: (0, 30, 0, 0)
+				padding: (80, 30, 80, 0)
 
-				__safe_id: [dropdown.__self__]
+				#__safe_id: [dropdown.__self__]
 
-				Button:
-					text: "Click To Select Interface"
-					on_release: dropdown.open(self)
-
-					id: btn
-				Widget:
-					size_hint_x: None
-					width: 0
-					on_parent: dropdown.dismiss()
-				DropDown:
-					id: dropdown
-					on_select: btn.text = '{}'.format(args[1])
-					Button:
-				        text: 'Philips Hue Lights'
-				        size_hint_y: None
-				        height: 50
-				        on_release:
-							dropdown.select('Philips Hue Lights')
-							run.disabled = False
-				    Button:
-				        text: 'MIDI Notes'
-				        size_hint_y: None
-				        height: 50
-				        on_release:
-							dropdown.select('MIDI Notes')
-							run.disabled = False
-					Button:
-				        text: 'Third Interface'
-				        size_hint_y: None
-				        height: 50
-				        on_release:
-							dropdown.select('Third Interface')
-							run.disabled = False
+				# Button:
+				# 	text: "Click To Select Interface"
+				# 	on_release: dropdown.open(self)
+				#
+				# 	id: btn
+				# Widget:
+				# 	size_hint_x: None
+				# 	width: 0
+				# 	on_parent: dropdown.dismiss()
+				# DropDown:
+				# 	id: dropdown
+				# 	on_select: btn.text = '{}'.format(args[1])
+				# 	Button:
+				#         text: 'Philips Hue Lights'
+				#         size_hint_y: None
+				#         height: 50
+				#         on_release:
+				# 			dropdown.select('Philips Hue Lights')
+				# 			run.disabled = False
+				#     Button:
+				#         text: 'MIDI Notes'
+				#         size_hint_y: None
+				#         height: 50
+				#         on_release:
+				# 			dropdown.select('MIDI Notes')
+				# 			run.disabled = False
+				# 	Button:
+				#         text: 'Third Interface'
+				#         size_hint_y: None
+				#         height: 50
+				#         on_release:
+				# 			dropdown.select('Third Interface')
+				# 			run.disabled = False
 				Button:
 					background_normal: ''
 					background_color: [0, 0.8, 0.3, 1]
 					text: "Run"
 					id: run
-					disabled: True
 					on_press:
 						root.manager.transition.direction = "left"
 						root.manager.transition.duration = 0.25
 						root.manager.current = "running"
-						root.run(btn.text, accordion)
+						root.run(root.selected, accordion)

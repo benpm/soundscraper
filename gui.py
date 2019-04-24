@@ -22,8 +22,7 @@ from kivy.uix.settings import Settings
 from kivy.uix.checkbox import CheckBox
 from os.path import basename
 import os.path
-from random import sample
-from string import ascii_lowercase
+
 
 Builder.load_file("./kv/gui.kv")
 Builder.load_file("./kv/runScreen.kv")
@@ -37,7 +36,7 @@ Builder.load_file("./kv/fileBrowser.kv")
 interface = 0
 
 ''' Philips Hue Light Bulbs Interface variables '''
-num_outputs = 0
+num_outputs = 1
 detect_comps = False
 
 '''
@@ -51,6 +50,7 @@ detect_comps = False
 '''
 
 class SetupScreen(Screen):
+	selected = ""
 
 	def insert_rv(self, value):
 		size = len(self.rv.data)
@@ -105,7 +105,7 @@ class SetupScreen(Screen):
 				and call correct mathod.
 			'''
 
-		elif selection == "Third Interface":
+		elif selection == "Interface 3":
 
 			interface = 2
 			'''
