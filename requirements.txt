@@ -1,0 +1,10 @@
+librosa
+ffmpeg
+simpleaudio
+qhue
+pause
+graphics.py
+mido
+kivy
+rtmidi
+python-rtmidi

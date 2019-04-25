@@ -9,8 +9,9 @@ from audio_stream import audio_stream
 from chroma_to_notes import get_notes
 from get_componets import get_cmpnts
 from midi_interface import MIDIOutput, initializeMIDI, getOutputs
+from visualizer_interface import VisWindow, VisOutput
 
-DETECT_COMPS = False
+DETECT_COMPS = True
 
 def main():
     trackers = []
@@ -24,6 +25,7 @@ def main():
     scheduler = sched.scheduler(time, pause.seconds)
 
     # bridge = initialize()
+    wind = VisWindow(500, 500, 16)
     midiPort = initializeMIDI(getOutputs()[-1])
 
     # Outputs

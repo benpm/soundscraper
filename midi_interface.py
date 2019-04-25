@@ -34,6 +34,6 @@ class MIDIOutput(Output):
         if label in NOTES.keys():
             self.msg.note = NOTES.get(label)
         else:
-
+            self.msg.note = random.randint(50, 70)
         self.msg.channel = 0
         self.port.send(self.msg)
