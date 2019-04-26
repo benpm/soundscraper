@@ -1,8 +1,14 @@
-from soundscraper import Output
+from soundscraper import Tracker, Output
 from os import path
 from qhue import Bridge, QhueException, create_new_username
-import random
 from time import sleep
+from audio_stream import audio_stream
+from chroma_to_notes import get_notes
+from get_componets import get_cmpnts
+import sched
+from time import time
+import librosa
+import pause
 
 def initialize():
     print("Connecting to bridge...")
@@ -76,35 +82,47 @@ class HueOutput(Output):
         if self.light == None:
             print(label)
         else:
-            #self.__flash_light(hue=random.randint(0, 65535))
             self.__bloop_light()
 
 def get_number_lights():
     return 3
 
-# def main():
-#     from random import randint
-#     from time import sleep
+def run_song(song_name, detect_comps, num_outputs):
+    bridge = initialize()
+    outputs = []
+    trackers = []
 
-#     # check for a credential file / create conn
-#     bridge = create_bridge_conn("auth.txt", "10.0.0.91")
+    song = audio_stream(song_name)
+    waveform, samplerate = librosa.load(song_name, sr=None)
+    scheduler = sched.scheduler(time, pause.seconds)
 
-#     # create a lights resource
-#     lights = bridge.lights
+    bridge = initialize()
 
-#     # Turn on all lights, set brightness to max, min transition time
-#     for index in range(1, 4):
-#         set_light(lights[index], bri=254, transitiontime=0, on=True)
+    # Outputs
+    for i in range(1, num_outputs + 1):
+        outputs.append(HueOutput(bridge, i))
     
-#     # Set random color on lights
-#     for index in range(10):
-#         set_light(lights[index % 3 + 1], hue=randint(0, 65535))
-#         sleep(1)
+    # Detect components and their activations
+    if detect_comps:
+        print("Detecting components...")
+        comp_events = get_cmpnts(waveform, samplerate, num_outputs)
+        for i in range(num_outputs):
+            comp_tracker = Tracker([x for x in comp_events if int(x[0]) == i], outputs[i].handler)
+            trackers.append(comp_tracker)
+            comp_tracker.schedule(scheduler)
+    else:    
+        print("Detecting notes...")
+        notes = get_notes(waveform, samplerate)
+        note_tracker = Tracker([x for x in notes if x[0] in ["C", "C#", "D", "D#"]], outputs[0].handler)
+        trackers.append(note_tracker)
+        note_tracker.schedule(scheduler)
+        note_tracker = Tracker([x for x in notes if x[0] in ["E", "F", "F#", "G"]], outputs[1].handler)
+        trackers.append(note_tracker)
+        note_tracker.schedule(scheduler)
+        note_tracker = Tracker([x for x in notes if x[0] in ["G#", "A", "A#", "B"]], outputs[2].handler)
+        trackers.append(note_tracker)
+        note_tracker.schedule(scheduler)
 
-#     # Flash random lights
-#     for index in range(15):
-#         flash_light(lights, index % 3 + 1, hue=randint(0, 65535))
-#         sleep(1)
-
-# if __name__ == "__main__":
-#     main()
+    print("Starting track and running events...")
+    song.start()
+    scheduler.run()

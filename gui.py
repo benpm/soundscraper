@@ -22,6 +22,7 @@ from kivy.uix.settings import Settings
 from kivy.uix.checkbox import CheckBox
 from os.path import basename
 import os.path
+import hue_interface
 
 
 Builder.load_file("./kv/gui.kv")
@@ -95,6 +96,8 @@ class SetupScreen(Screen):
 			'''
 				Call correct method from Haydn's API.
 			'''
+
+			hue_interface.run_song(playlist[0], detect_comps, num_outputs)
 
 		elif selection == "MIDI Notes":
 
