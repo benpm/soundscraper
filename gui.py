@@ -23,6 +23,7 @@ from kivy.uix.checkbox import CheckBox
 from os.path import basename
 import os.path
 import hue_interface
+import midi_interface
 
 
 Builder.load_file("./kv/gui.kv")
@@ -101,6 +102,11 @@ class SetupScreen(Screen):
 
 		elif selection == "MIDI Notes":
 
+			midi_interface = midi_interface.getOutputs()
+			dropdown_menu = self.ids.dropdown
+			for i in midi_interface:
+				dropdown_menu.add_widget(Button(text=i, size_hint_y=None, height=50, on_release=dropdown.select(i)))
+				print(i)
 			interface = 1
 			'''
 				Break down what user setup
