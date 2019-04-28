@@ -40,7 +40,7 @@ interface = 0
 ''' Philips Hue Light Bulbs Interface variables '''
 num_outputs = 1
 detect_comps = False
-
+selected = ""
 '''
 	MIDI notes
 	VARIABLES GO HERE
@@ -102,17 +102,13 @@ class SetupScreen(Screen):
 
 		elif selection == "MIDI Notes":
 
-			midi_interface = midi_interface.getOutputs()
-			dropdown_menu = self.ids.dropdown
-			for i in midi_interface:
-				dropdown_menu.add_widget(Button(text=i, size_hint_y=None, height=50, on_release=dropdown.select(i)))
-				print(i)
 			interface = 1
 			'''
 				Break down what user setup
 				inside MIDI configurations,
 				and call correct mathod.
 			'''
+			midi_interface.initializeMIDI(self.ids.dropdown.text)
 
 		elif selection == "Interface 3":
 
@@ -152,10 +148,21 @@ class MainApp(App):
 	def build(self):
 		Window.clearcolor = (0.16, 0.17, 0.20, 0.1)
 		screen_manager = ScreenManager()
-		screen_manager.add_widget(SetupScreen(name="setup"))
+
+		setup = SetupScreen(name="setup")
+		dropdown_menu = setup.ids.dropdown
+		midi_interface = ["test", "test1", "test2"]
+		#midi_interface = midi_interface.getOutputs()
+		for i in midi_interface:
+			button = Button(text=i, height=75, size_hint_y=None, on_release=lambda e: dropdown_menu.select(e.text))
+			dropdown_menu.add_widget(button)
+
+
+		screen_manager.add_widget(setup)
 		screen_manager.add_widget(RunScreen(name="running"))
 		screen_manager.add_widget(FileBrowserScreen(name="fileBrowser"))
 		return screen_manager
+
 
 if __name__ == "__main__":
 	app = MainApp()

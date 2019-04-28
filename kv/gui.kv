@@ -77,10 +77,6 @@
 				id: accordion
 				size_hint_y: 0.9
 				orientation: "vertical"
-				on_touch_down:
-					if zero.collapse_alpha == 0: root.selected = "Philips Hue Lights"
-					if one.collapse_alpha == 0: root.selected = "MIDI Notes"
-					if two.collapse_alpha == 0: root.selected = "Interface 3"
 
 				AccordionItem:
 					id: one
@@ -104,6 +100,7 @@
 						DropDown:
 							id: dropdown
 							on_select: btn.text = '{}'.format(args[1])
+
 
 				AccordionItem:
 					id: two
@@ -217,4 +214,6 @@
 						root.manager.transition.direction = "left"
 						root.manager.transition.duration = 0.25
 						root.manager.current = "running"
-						root.run(root.selected, accordion)
+						if one.collapse == 0.0: root.run("MIDI Notes", accordion)
+						if two.collapse == 0.0: root.run("Interface 3", accordion)
+						if zero.collapse == 0.0: root.run("Philips Hue Lights", accordion)
