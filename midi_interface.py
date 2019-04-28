@@ -29,6 +29,7 @@ class MIDIOutput(Output):
     def __init__(self, port, index):
         self.port = port
         self.msg = mido.Message("note_on")
+        self.msgoff = mido.Message("note_off")
     
     def handler(self, label, start_time, length):
         if label in NOTES.keys():
@@ -37,3 +38,6 @@ class MIDIOutput(Output):
             self.msg.note = random.randint(50, 70)
         self.msg.channel = 0
         self.port.send(self.msg)
+        sleep(0.05)
+        self.msgoff.note = self.msg.note
+        self.port.send(self.msgoff)

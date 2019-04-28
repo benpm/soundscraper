@@ -25,7 +25,7 @@ def main():
     scheduler = sched.scheduler(time, pause.seconds)
 
     # bridge = initialize()
-    wind = VisWindow(500, 500, 16)
+    # wind = VisWindow(500, 500, 16)
     midiPort = initializeMIDI(getOutputs()[-1])
 
     # Outputs
