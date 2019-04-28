@@ -87,7 +87,7 @@
 					title: "MIDI Notes"
 
 					BoxLayout:
-						size_hint_y: 0.3
+						orientation: "vertical"
 						padding: (50, 80, 50, 80)
 
 
@@ -96,6 +96,7 @@
 							text: "Click To Select MIDI Interface"
 							on_release: dropdown.open(self)
 							id: btn
+							size_hint_y: 0.3
 						Widget:
 							size_hint_x: None
 							width: 0
@@ -103,7 +104,7 @@
 						DropDown:
 							id: dropdown
 							on_select: btn.text = '{}'.format(args[1])
-						
+
 				AccordionItem:
 					id: two
 					title: "Interface 3"
