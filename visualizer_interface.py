@@ -1,6 +1,6 @@
 from soundscraper import Output
 from time import sleep
-from graphics import *
+from graphics import GraphWin, Rectangle, Point, color_rgb
 
 """class HueOutput(Output):
     def __init__(self, bridge, light_index):
@@ -27,7 +27,7 @@ class VisOutput(Output):
 
     def handler(self, label, start, length):
         self.rectangles[self.index].draw(self.win)
-        sleep(0.15)
+        sleep(0.01)
         self.rectangles[self.index].undraw()
 
 #win.getMouse() # Pause to view result
