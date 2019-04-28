@@ -16,7 +16,7 @@ DETECT_COMPS = True
 def main():
     trackers = []
     outputs = []
-    song_name = "./test_music/drummer.wav"
+    song_name = "./test_music/frog.wav"
 
     # Load samples from file to be used with librosa
     print("Loading file...")
@@ -28,7 +28,7 @@ def main():
     # midiPort = initializeMIDI(getOutputs()[-1])
 
     # Outputs
-    num_outputs = 3
+    num_outputs = 4
     wind = VisWindow(1920, 1080, num_outputs)
     for i in range(1, num_outputs + 1):
         outputs.append(VisOutput(wind, i))
