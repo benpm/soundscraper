@@ -1,5 +1,6 @@
 # soundscraper
 API for audio pattern recognition
+![](media/spectro.png)
 
 ## Dependencies
 ### Python:

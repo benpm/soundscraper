@@ -1,7 +1,13 @@
-from soundscraper import Output
+from soundscraper import Tracker, Output
 from os import path
-import random
 from time import sleep
+from audio_stream import audio_stream
+from chroma_to_notes import get_notes
+from get_componets import get_cmpnts
+import sched
+from time import time
+import librosa
+import pause
 import mido.ports
 
 NOTES = {
@@ -41,3 +47,23 @@ class MIDIOutput(Output):
         sleep(0.05)
         self.msgoff.note = self.msg.note
         self.port.send(self.msgoff)
+
+def run_song(song_name, port_name):
+    port = initializeMIDI(port_name)
+
+    song = audio_stream(song_name)
+    waveform, samplerate = librosa.load(song_name, sr=None)
+    scheduler = sched.scheduler(time, pause.seconds)
+
+    # Outputs
+    midi_output = MIDIOutput(port, 0)
+    
+    # Detect components and their activations
+    print("Detecting notes...")
+    notes = get_notes(waveform, samplerate)
+    note_tracker = Tracker(notes, midi_output.handler)
+    note_tracker.schedule(scheduler)
+
+    print("Starting track and running events...")
+    song.start()
+    scheduler.run()
