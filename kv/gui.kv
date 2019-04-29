@@ -81,32 +81,86 @@
 				AccordionItem:
 					id: one
 					title: "MIDI Notes"
-
 					BoxLayout:
+						padding: (0, 30, 0, 0)
 						orientation: "vertical"
-						padding: (50, 80, 50, 80)
+						Label:
+							size_hint_y: 0.1
+							text: "Configuration for MIDI Notes"
+						BoxLayout:
+							size_hint_y: 0.9
+							orientation: "vertical"
+							padding: (50, 80, 50, 80)
 
-
-						__safe_id: [dropdown.__self__]
-						Button:
-							text: "Click To Select MIDI Interface"
-							on_release: dropdown.open(self)
-							id: btn
-							size_hint_y: 0.3
-						Widget:
-							size_hint_x: None
-							width: 0
-							on_parent: dropdown.dismiss()
-						DropDown:
-							id: dropdown
-							on_select: btn.text = '{}'.format(args[1])
+							__safe_id: [dropdown.__self__]
+							Button:
+								text: "Click To Select MIDI Interface"
+								on_release: dropdown.open(self)
+								id: btn
+								size_hint_y: 0.3
+							Widget:
+								size_hint_x: None
+								width: 0
+								on_parent: dropdown.dismiss()
+							DropDown:
+								id: dropdown
+								on_select: btn.text = '{}'.format(args[1])
 
 
 				AccordionItem:
 					id: two
-					title: "Interface 3"
-					Label:
-						text: "Configuration"
+					title: "Visualizer"
+					BoxLayout:
+						orientation: "vertical"
+						padding: (0, 30, 0, 0)
+						Label:
+							size_hint_y: 0.1
+							text: "Configuration for the Audio Visualizer"
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Detect Notes"
+							BoxLayout:
+								padding: (50, 80, 50, 80)
+								ToggleButton:
+									allow_no_selection: False
+									id: notes_av
+									text: "On"
+									state: "down"
+									group: "AVmode"
+									on_state:
+										if notes_av.text is "Off": notes_av.text = "On"
+										else: notes_av.text = "Off"
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Detect Components"
+							BoxLayout:
+								padding: (50, 80, 50, 80)
+								ToggleButton:
+									allow_no_selection: False
+									id: comps_av
+									text: "Off"
+									state: "normal"
+									group: "AVmode"
+									on_state:
+										if comps_av.text is "Off": comps_av.text = "On"
+										else: comps_av.text = "Off"
+
+						BoxLayout:
+							size_hint_y: 0.3
+							Label:
+								text: "Number of Outputs"
+							Slider:
+								id: s2
+								step: 1
+								min: 1
+								max: 10
+							Label:
+								size_hint_x: 0.20
+								text: '{}'.format(s2.value)
+								id: num_outputs_av
+
 				AccordionItem:
 					id: zero
 					title: "Philips Hue Light Bulbs"
@@ -124,13 +178,13 @@
 								padding: (50, 80, 50, 80)
 								ToggleButton:
 									allow_no_selection: False
-									id: notes
+									id: notes_ph
 									text: "On"
 									state: "down"
 									group: "PHLmode"
 									on_state:
-										if notes.text is "Off": notes.text = "On"
-										else: notes.text = "Off"
+										if notes_ph.text is "Off": notes_ph.text = "On"
+										else: notes_ph.text = "Off"
 						BoxLayout:
 							size_hint_y: 0.3
 							Label:
@@ -139,13 +193,13 @@
 								padding: (50, 80, 50, 80)
 								ToggleButton:
 									allow_no_selection: False
-									id: comps
+									id: comps_ph
 									text: "Off"
 									state: "normal"
 									group: "PHLmode"
 									on_state:
-										if comps.text is "Off": comps.text = "On"
-										else: comps.text = "Off"
+										if comps_ph.text is "Off": comps_ph.text = "On"
+										else: comps_ph.text = "Off"
 
 						BoxLayout:
 							size_hint_y: 0.3
@@ -159,7 +213,7 @@
 							Label:
 								size_hint_x: 0.20
 								text: '{}'.format(s1.value)
-								id: num_outputs
+								id: num_outputs_ph
 
 
 
@@ -211,9 +265,6 @@
 					text: "Run"
 					id: run
 					on_press:
-						root.manager.transition.direction = "left"
-						root.manager.transition.duration = 0.25
-						root.manager.current = "running"
 						if one.collapse == 0.0: root.run("MIDI Notes", accordion)
 						if two.collapse == 0.0: root.run("Interface 3", accordion)
 						if zero.collapse == 0.0: root.run("Philips Hue Lights", accordion)

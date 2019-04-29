@@ -87,43 +87,40 @@ class SetupScreen(Screen):
 
 		if selection == "Philips Hue Lights":
 
-			interface = 0
-			num_outputs = int(self.ids.num_outputs.text)
-			if self.ids.comps.state == "down":
+			interface = "Philips Hue Lights"
+			num_outputs = int(self.ids.num_outputs_ph.text)
+			if self.ids.comps_ph.state == "down":
 				detect_comps = True
 			else:
 				detect_comps = False
 
-			'''
-				Call correct method from Haydn's API.
-			'''
-
-			hue_interface.run_song(playlist[0], detect_comps, num_outputs)
+			#hue_interface.run_song(playlist[0], detect_comps, num_outputs)
 
 		elif selection == "MIDI Notes":
 
-			interface = 1
-			'''
-				Break down what user setup
-				inside MIDI configurations,
-				and call correct mathod.
-			'''
-			midi_interface.initializeMIDI(self.ids.dropdown.text)
+			interface = "MIDI Notes"
+			selected_midi = self.ids.btn.text
+			num_outputs = "not available (MIDI)"
+			detect_comps = "not available (MIDI)"
+
 
 		elif selection == "Interface 3":
 
-			interface = 2
-			'''
-				Break down what user setup
-				inside 3rd configurations,
-				and call correct method.
-			'''
+			interface = "Audio Visualizer"
+			num_outputs = int(self.ids.num_outputs_av.text)
+			if self.ids.comps_av.state == "down":
+				detect_comps = True
+			else:
+				detect_comps = False
+
+			# Call Pierce's function to run audio visualizer
 
 		#for debugging
-		print(playlist)
-		print(interface)
-		print(num_outputs)
-		print(detect_comps)
+		print(f"Song(s) selected: {playlist}")
+		print(f"Interface: {interface}")
+		print(f"# outputs: {num_outputs}")
+		print(f"Detecting Comps: {detect_comps}")
+		print()
 
 		#need to empty this global every time
 		playlist = []
