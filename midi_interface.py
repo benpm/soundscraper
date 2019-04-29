@@ -9,6 +9,7 @@ from time import time
 import librosa
 import pause
 import mido.ports
+import random
 
 NOTES = {
     "C": 72,

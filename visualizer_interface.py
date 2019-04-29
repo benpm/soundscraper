@@ -1,5 +1,13 @@
-from soundscraper import Output
+from soundscraper import Tracker, Output
+from os import path
 from time import sleep
+from audio_stream import audio_stream
+from chroma_to_notes import get_notes
+from get_componets import get_cmpnts
+import sched
+from time import time
+import librosa
+import pause
 from graphics import GraphWin, Rectangle, Point, color_rgb
 import random
 """class HueOutput(Output):
@@ -31,7 +39,7 @@ class VisOutput(Output):
         self.color_index = index % 3
         
     def handler(self, label, start, length):
-        self. color_index = (color_index + 1) % 3
+        self.color_index = (self.color_index + 1) % 3
         self.rectangles[self.index - 1].setFill(self.colors[self.color_index])
 
 def runMain(audio_path, num_outputs, detect_comps):
