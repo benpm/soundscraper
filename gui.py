@@ -108,7 +108,7 @@ class SetupScreen(Screen):
 				inside MIDI configurations,
 				and call correct mathod.
 			'''
-			midi_interface.initializeMIDI(self.ids.dropdown.text)
+			midi_interface.run_song(playlist[0], self.ids.btn.text)
 
 		elif selection == "Interface 3":
 
@@ -151,9 +151,9 @@ class MainApp(App):
 
 		setup = SetupScreen(name="setup")
 		dropdown_menu = setup.ids.dropdown
-		midi_interface = ["test", "test1", "test2"]
-		#midi_interface = midi_interface.getOutputs()
-		for i in midi_interface:
+		#midi_interface = ["test", "test1", "test2"]
+		midi_outputs = midi_interface.getOutputs()
+		for i in midi_outputs:
 			button = Button(text=i, height=75, size_hint_y=None, on_release=lambda e: dropdown_menu.select(e.text))
 			dropdown_menu.add_widget(button)
 
