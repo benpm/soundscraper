@@ -24,7 +24,7 @@ from os.path import basename
 import os.path
 import hue_interface
 import midi_interface
-
+import visualizer_interface
 
 Builder.load_file("./kv/gui.kv")
 Builder.load_file("./kv/runScreen.kv")
@@ -114,6 +114,7 @@ class SetupScreen(Screen):
 				detect_comps = False
 
 			# Call Pierce's function to run audio visualizer
+			visualizer_interface.runMain(playlist[0], num_outputs, detect_comps)
 
 		#for debugging
 		print(f"Song(s) selected: {playlist}")
