@@ -18,7 +18,7 @@ def get_cmpnts(raw_audio, sample_rate, num_cmpnts):
     audio_length = len(raw_audio) / sample_rate
     precision = audio_length / activations.shape[1]
 
-    threshold = 0.17
+    threshold = 0.25
     
     max_vals = np.zeros(shape=num_cmpnts)
     for i in range(activations.shape[1]):
