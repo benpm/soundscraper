@@ -94,7 +94,7 @@ class SetupScreen(Screen):
 			else:
 				detect_comps = False
 
-			#hue_interface.run_song(playlist[0], detect_comps, num_outputs)
+			hue_interface.run_song(playlist[0], detect_comps, num_outputs)
 
 		elif selection == "MIDI Notes":
 
